@@ -1,79 +1,67 @@
 import { auth, signOut } from "@/auth";
+import Image from "next/image";
 import Link from "next/link";
 
-interface NavbarProps {
-  /** Muestra el correo del usuario y el botón de cerrar sesión (modo dashboard) */
-  showUserControls?: boolean;
-  /** Email del usuario a mostrar (sólo cuando showUserControls=true) */
-  userEmail?: string | null;
-}
-
-/**
- * Navbar compartido entre el catálogo público y el panel de usuario.
- * Es un Server Component que llama a auth() para mostrar el CTA correcto.
- */
-export default async function Navbar({
-  showUserControls = false,
-  userEmail,
-}: NavbarProps) {
-  const session = await auth();
-
+export default function Navbar() {
   return (
-    <nav className="sticky top-0 z-50 border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-orange-600 text-white font-bold text-sm select-none">
-            FIEI
-          </div>
-          <Link
-            href="/"
-            className="font-bold text-zinc-900 dark:text-white text-lg hidden sm:block hover:text-orange-600 transition-colors"
-          >
-            La Cachina
+    <nav className="sticky top-0 z-50 border-b border-zinc-200 dark:border-zinc-800 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md">
+      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        
+        {/* Lado Izquierdo: UNFV */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="w-10 h-10 relative flex-shrink-0 bg-white rounded-full p-1 shadow-sm">
+              <Image
+                src="/UNFV.svg"
+                alt="UNFV"
+                fill
+                className="object-contain p-0.5"
+                sizes="40px"
+                priority
+              />
+            </div>
+            <div className="hidden sm:flex flex-col text-[10px] sm:text-[11px] font-bold text-zinc-800 dark:text-zinc-200 uppercase leading-snug">
+              <span>Universidad Nacional</span>
+              <span>Federico Villarreal</span>
+            </div>
+            <span className="sm:hidden text-xs font-bold text-zinc-800 dark:text-zinc-200 uppercase">
+              UNFV
+            </span>
           </Link>
         </div>
 
-        {/* Lado derecho */}
-        <div className="flex items-center gap-3">
-          {showUserControls && userEmail ? (
-            // Modo dashboard: muestra el email y botón de cerrar sesión
-            <>
-              <span className="text-sm text-zinc-500 dark:text-zinc-400 hidden sm:block truncate max-w-[200px]">
-                {userEmail}
-              </span>
-              <form
-                action={async () => {
-                  "use server";
-                  await signOut({ redirectTo: "/" });
-                }}
-              >
-                <button
-                  type="submit"
-                  className="px-3 py-1.5 text-sm rounded-lg border border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-                >
-                  Cerrar sesión
-                </button>
-              </form>
-            </>
-          ) : session?.user ? (
-            // Visitante autenticado en modo catálogo
-            <Link
-              href="/dashboard"
-              className="px-4 py-2 rounded-lg bg-orange-600 text-white font-medium text-sm hover:bg-orange-700 transition-colors"
-            >
-              Mi Panel
-            </Link>
-          ) : (
-            // Visitante anónimo
-            <Link
-              href="/login"
-              className="px-4 py-2 rounded-lg bg-orange-600 text-white font-medium text-sm hover:bg-orange-700 transition-colors"
-            >
-              Iniciar Sesión
-            </Link>
-          )}
+        {/* Centro: HardSwap */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <Link href="/" className="flex items-center">
+            <span className="text-xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-500 transition-transform hover:scale-105">
+              HardSwap
+            </span>
+          </Link>
         </div>
+
+        {/* Lado Derecho: FIEI */}
+        <div className="flex items-center gap-2 sm:gap-3 text-right">
+          <Link href="/" className="flex items-center gap-2 group justify-end">
+            <span className="sm:hidden text-xs font-bold text-zinc-800 dark:text-zinc-200 uppercase">
+              FIEI
+            </span>
+            <div className="hidden sm:flex flex-col text-[10px] sm:text-[11px] font-bold text-zinc-800 dark:text-zinc-200 uppercase leading-snug text-right">
+              <span>Facultad de Ingeniería</span>
+              <span>Electrónica e Informática</span>
+            </div>
+            <div className="w-10 h-10 relative flex-shrink-0 bg-white rounded-full p-1 shadow-sm">
+              <Image
+                src="/FIEI.webp"
+                alt="FIEI"
+                fill
+                className="object-contain p-0.5"
+                sizes="40px"
+                priority
+              />
+            </div>
+          </Link>
+        </div>
+
       </div>
     </nav>
   );

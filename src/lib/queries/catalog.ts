@@ -21,7 +21,8 @@ export async function getAvailableProducts() {
       title: true,
       description: true,
       price: true,
-      imageUrl: true,
+      imageUrls: true,
+      tags: true, // Para filtrado client-side por subcategoría
       user: {
         select: { name: true, whatsappNumber: true },
       },
@@ -37,3 +38,34 @@ export async function getAvailableProducts() {
 export type AvailableProduct = Awaited<
   ReturnType<typeof getAvailableProducts>
 >[number];
+
+/**
+ * Retorna el subconjunto mínimo del catálogo para indexar en Fuse.js (client-side).
+ * Solo campos necesarios para búsqueda: id, title, categoryName.
+ * No tiene límite de 50 — el Worker los indexará todos en background.
+ */
+export async function getCatalogForSearch() {
+  const rows = await prisma.product.findMany({
+    where: {
+      status: "AVAILABLE",
+      expiresAt: { gt: new Date() },
+    },
+    select: {
+      id: true,
+      title: true,
+      category: { select: { name: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return rows.map((p) => ({
+    id: p.id,
+    title: p.title,
+    categoryName: p.category.name,
+  }));
+}
+
+export type CatalogSearchItem = Awaited<
+  ReturnType<typeof getCatalogForSearch>
+>[number];
+

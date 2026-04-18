@@ -25,7 +25,7 @@ export async function getUserWithProducts(userId: string) {
           title: true,
           description: true,
           price: true,
-          imageUrl: true,
+          imageUrls: true,
           status: true,
           expiresAt: true,
           createdAt: true,

@@ -85,7 +85,11 @@ model Product {
   description String        @db.Text
   price       Int // Guardado en centavos
   status      ProductStatus @default(AVAILABLE)
-  imageUrl    String
+  imageUrls     String[]
+
+  /// Tags de subcategoría (ej. ["ESP32", "microcontrolador", "wifi"]).
+  /// Pensado para ser llenado automáticamente por IA al publicar.
+  tags String[] @default([])
 
   createdAt DateTime @default(now())
   expiresAt DateTime // Calculado a 14 días desde la creación

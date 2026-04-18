@@ -12,8 +12,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+import UserFloatingButton from "@/components/UserFloatingButton";
+
 export const metadata: Metadata = {
-  title: "La Cachina de FIEI",
+  title: "HardSwap - FIEI UNFV",
   description:
     "Plataforma exclusiva de compraventa de segunda mano para la comunidad de la Facultad de Ingeniería Electrónica e Informática de la UNFV.",
 };
@@ -28,7 +30,10 @@ export default function RootLayout({
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <UserFloatingButton />
+      </body>
     </html>
   );
 }

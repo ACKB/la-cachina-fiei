@@ -16,12 +16,13 @@ export const proxy = auth((req) => {
 
   if (isAuthPage) {
     if (isAuth) {
-      return Response.redirect(new URL('/dashboard', req.nextUrl))
+      return Response.redirect(new URL('/', req.nextUrl))
     }
     return null
   }
 
-  if (!isAuth && req.nextUrl.pathname.startsWith('/dashboard')) {
+  // Si no está autenticado y no está en login, enviar a login (incluso si está en "/")
+  if (!isAuth) {
     return Response.redirect(new URL('/login', req.nextUrl))
   }
 })
